@@ -3,6 +3,7 @@
 Project to turn an 11.6 inch screen from a chromebook into an external monitor
 
 ![Main](https://github.com/tmcdonagh/3dPrinting/blob/master/monitorCase/img/main.jpg)
+# [More Images](https://github.com/tmcdonagh/3dPrinting/tree/master/monitorCase/img)
 
 Parts list:
 - [Samsung Chromebook 2](https://www.samsung.com/us/support/owners/product/chromebook-2) Screen  
