@@ -2,6 +2,8 @@
 
 Project to turn an 11.6 inch screen from a chromebook into an external monitor
 
+![Main](https://github.com/tmcdonagh/3dPrinting/blob/master/monitorCase/img/main.jpg)
+
 Parts list:
 - [Samsung Chromebook 2](https://www.samsung.com/us/support/owners/product/chromebook-2) Screen  
 - LCD Controller Board [Amazon $26.68](https://www.amazon.com/gp/product/B06XC6SJF7/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1)
