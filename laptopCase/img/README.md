@@ -5,4 +5,6 @@
 ![02](https://github.com/tmcdonagh/3dPrinting/blob/master/laptopCase/img/02.jpg)
 ![03](https://github.com/tmcdonagh/3dPrinting/blob/master/laptopCase/img/03.jpg)
 ![04](https://github.com/tmcdonagh/3dPrinting/blob/master/laptopCase/img/04.jpg)
+![htop](https://github.com/tmcdonagh/3dPrinting/blob/master/laptopCase/img/htop.jpg)
+![performance](https://github.com/tmcdonagh/3dPrinting/blob/master/laptopCase/img/performance.jpg)
 
