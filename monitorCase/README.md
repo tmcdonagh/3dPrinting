@@ -2,7 +2,7 @@
 
 Project to turn an 11.6 inch screen from a chromebook into an external monitor
 
-![Main](https://github.com/tmcdonagh/3dPrinting/blob/master/monitorCase/img/main.jpg)
+![Main](https://github.com/tmcdonagh/3dPrinting/blob/master/monitorCase/img/newMain.jpg)
 # [More Images](https://github.com/tmcdonagh/3dPrinting/tree/master/monitorCase/img)
 
 Parts list:
