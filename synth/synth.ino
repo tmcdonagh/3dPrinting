@@ -5,36 +5,104 @@
 #include <Wire.h>
 #include "Adafruit_MCP23017.h"
 
-//#include "pitches.h"
-
-// Basic pin reading and pullup test for the MCP23017 I/O expander
-// public domain!
-
-// Connect pin #12 of the expander to Analog 5 (i2c clock)
-// Connect pin #13 of the expander to Analog 4 (i2c data)
-// Connect pins #15, 16 and 17 of the expander to ground (address selection)
-// Connect pin #9 of the expander to 5V (power)
-// Connect pin #10 of the expander to ground (common ground)
-// Connect pin #18 through a ~10kohm resistor to 5V (reset pin, active low)
-
-// Input #0 is on pin 21 so connect a button or switch from there to ground
-
 Adafruit_MCP23017 mcp;
 
 int buttonPushCounter = 0;   // counter for the number of button presses
 int buttonState = 0;         // current state of the button
 int lastButtonState = 0;     // previous state of the button
 
+// frets[buttonPos][guitarString][fret]
+
+void printArray ( const int [][3][5] );
+
+
+// Fret Frequencies
+int frets[4][3][5] = {0};
+
+
+
+
+
+
+
 void setup() {
+
+  // When buttonPushCounter == 0 uses first 3 strings of guitar
+  frets[0][0][0] = 82; // Open E String
+  frets[0][0][1] = 87;
+  frets[0][0][2] = 93;
+  frets[0][0][3] = 98;
+  frets[0][0][4] = 104;
+  frets[0][1][0] = 110; // Open A String
+  frets[0][1][1] = 117;
+  frets[0][1][2] = 124;
+  frets[0][1][3] = 131;
+  frets[0][1][4] = 139;
+  frets[0][2][0] = 147; // Open D String
+  frets[0][2][1] = 156;
+  frets[0][2][2] = 165;
+  frets[0][2][3] = 175;
+  frets[0][2][4] = 185;
+
+  // When buttonPushCounter == 1 uses second 3 strings of guitar
+  frets[1][0][0] = 110; // Open A String
+  frets[1][0][1] = 117;
+  frets[1][0][2] = 124;
+  frets[1][0][3] = 131;
+  frets[1][0][4] = 139;
+  frets[1][1][0] = 147; // Open D String
+  frets[1][1][1] = 156;
+  frets[1][1][2] = 165;
+  frets[1][1][3] = 175;
+  frets[1][1][4] = 185;
+  frets[1][2][0] = 196; // Open G String
+  frets[1][2][1] = 208;
+  frets[1][2][2] = 220;
+  frets[1][2][3] = 233;
+  frets[1][2][4] = 247;
+
+  // When buttonPushCounter == 2 uses third 3 strings of guitar
+  frets[2][0][0] = 147; // Open D String
+  frets[2][0][1] = 156;
+  frets[2][0][2] = 165;
+  frets[2][0][3] = 175;
+  frets[2][0][4] = 185;
+  frets[2][1][0] = 196; // Open G String
+  frets[2][1][1] = 208;
+  frets[2][1][2] = 220;
+  frets[2][1][3] = 233;
+  frets[2][1][4] = 247;
+  frets[2][2][0] = 247; // Open B String
+  frets[2][2][1] = 262;
+  frets[2][2][2] = 277;
+  frets[2][2][3] = 294;
+  frets[2][2][4] = 311;
+
+  // When buttonPushCounter == 2 uses last 3 strings of guitar
+  frets[3][0][0] = 196; // Open G String
+  frets[3][0][1] = 208;
+  frets[3][0][2] = 220;
+  frets[3][0][3] = 233;
+  frets[3][0][4] = 247;
+  frets[3][1][0] = 247; // Open B String
+  frets[3][1][1] = 262;
+  frets[3][1][2] = 277;
+  frets[3][1][3] = 294;
+  frets[3][1][4] = 311;
+  frets[3][2][0] = 330; // Open E String
+  frets[3][2][1] = 350;
+  frets[3][2][2] = 370;
+  frets[3][2][3] = 392;
+  frets[3][2][4] = 415;
+
+
   mcp.begin();      // use default address 0
 
 
   pinMode(23, OUTPUT);
   pinMode(21, OUTPUT);
   pinMode(20, OUTPUT);
-
-
-  //asdasd
+  pinMode(14, OUTPUT);
 
 
 
@@ -85,13 +153,10 @@ void loop() {
     digitalWrite(21, HIGH);
     digitalWrite(20, HIGH);
   */
-  if (mcp.digitalRead(7) == 1) {
-
-  }
 
 
   // read the pushbutton input pin:
-  buttonState = mcp.digitalRead(7);
+  buttonState = !(mcp.digitalRead(7));
 
   // compare the buttonState to its previous state
   if (buttonState != lastButtonState) {
@@ -110,99 +175,114 @@ void loop() {
   // turns on the LED every four button pushes by checking the modulo of the
   // button push counter. the modulo function gives you the remainder of the
   // division of two numbers:
-  if (buttonPushCounter == 3) {
+  if (buttonPushCounter == 4) {
     buttonPushCounter = 0;
   }
-  if (buttonPushCounter == 0) {
-    digitalWrite(23, HIGH);
-    digitalWrite(21, LOW);
-    digitalWrite(20, LOW);
-  }
-  else if (buttonPushCounter == 1) {
-    digitalWrite(23, LOW);
-    digitalWrite(21, HIGH);
-    digitalWrite(20, LOW);
-  }
-  else if (buttonPushCounter == 2) {
-    digitalWrite(23, LOW);
-    digitalWrite(21, LOW);
+  
+    if (buttonPushCounter == 0) {
     digitalWrite(20, HIGH);
-  }
+    digitalWrite(21, LOW);
+    digitalWrite(23, LOW);
+    digitalWrite(14, LOW);
 
 
 
 
+    }
+    else if (buttonPushCounter == 1) {
+    digitalWrite(20, LOW);
+    digitalWrite(21, HIGH);
+    digitalWrite(23, LOW);
+    digitalWrite(14, LOW);
+
+    }
+    else if (buttonPushCounter == 2) {
+    digitalWrite(20, LOW);
+    digitalWrite(21, LOW);
+    digitalWrite(23, HIGH);
+    digitalWrite(14, LOW);
+
+    }
+    else if (buttonPushCounter == 3) {
+    digitalWrite(20, LOW);
+    digitalWrite(21, LOW);
+    digitalWrite(23, LOW);
+    digitalWrite(14, HIGH);
 
 
-
-
+    }
+  
 
   // Guitar Mode
-  // G
-  if (mcp.digitalRead(2) == 0) { // Fret 1 G
+  // Top Row
+  if (mcp.digitalRead(2) == 0) { // Open
     digitalWrite(13, HIGH);
-    tone(22, 196, 20);
+    tone(22, frets[buttonPushCounter][2][0], 20);
   }
-  else if (mcp.digitalRead(5) == 0) { // Fret 2 G
+  else if (mcp.digitalRead(5) == 0) { // Fret 1
     digitalWrite(13, HIGH);
-    tone(22, 208, 20);
+    tone(22, frets[buttonPushCounter][2][1], 20);
   }
-  else if (mcp.digitalRead(4) == 0) { // Fret 3 G
+  else if (mcp.digitalRead(4) == 0) { // Fret 2
     digitalWrite(13, HIGH);
-    tone(22, 220, 20);
+    tone(22, frets[buttonPushCounter][2][2], 20);
   }
-  else if ( mcp.digitalRead(3) == 0) { // Fret 4 G
+  else if (mcp.digitalRead(3) == 0) { // Fret 3
     digitalWrite(13, HIGH);
-    tone(22, 233, 20);
+    tone(22, frets[buttonPushCounter][2][3], 20);
   }
-  else if (mcp.digitalRead(6) == 0) { // Open G
+  else if ( mcp.digitalRead(6) == 0) { // Fret 4
     digitalWrite(13, HIGH);
-    tone(22, 247, 20);
-  }
-
-  // D
-  if (mcp.digitalRead(1) == 0) { // Fret 1 D
-    digitalWrite(13, HIGH);
-    tone(22, 147, 20);
-  }
-  else if (mcp.digitalRead(0) == 0) { // Fret 2 D
-    digitalWrite(13, HIGH);
-    tone(22, 156, 20);
-  }
-  else if (mcp.digitalRead(15) == 0) { // Fret 3 D
-    digitalWrite(13, HIGH);
-    tone(22, 165, 20);
-  }
-  else if (mcp.digitalRead(14) == 0) { // Fret 4 D
-    digitalWrite(13, HIGH);
-    tone(22, 175, 20);
-  }
-  else if (mcp.digitalRead(13) == 0) {
-    digitalWrite(13, HIGH);
-    tone(22, 185, 21);
+    tone(22, frets[buttonPushCounter][2][4], 20);
   }
 
-  // A
-  if (mcp.digitalRead(12) == 0) { // Fret 1 A
+
+  // Middle Row
+  else if (mcp.digitalRead(1) == 0) { // Open
     digitalWrite(13, HIGH);
-    tone(22, 110, 20);
+    tone(22, frets[buttonPushCounter][1][0], 20);
   }
-  else if (mcp.digitalRead(11) == 0) { // Fret 2 A
+  else if (mcp.digitalRead(0) == 0) { // Fret 1
     digitalWrite(13, HIGH);
-    tone(22, 117, 20);
+    tone(22, frets[buttonPushCounter][1][1], 20);
   }
-  else if (mcp.digitalRead(10) == 0) { // Fret 3 A
+  else if (mcp.digitalRead(15) == 0) { // Fret 2
     digitalWrite(13, HIGH);
-    tone(22, 124, 20);
+    tone(22, frets[buttonPushCounter][1][2], 20);
   }
-  else if (mcp.digitalRead(9) == 0) { // Fret 4 A
+  else if (mcp.digitalRead(14) == 0) { // Fret 3
     digitalWrite(13, HIGH);
-    tone(22, 131, 20);
+    tone(22, frets[buttonPushCounter][1][3], 20);
   }
-  else if (mcp.digitalRead(8) == 0) {
+  else if (mcp.digitalRead(13) == 0) { // Fret 4
     digitalWrite(13, HIGH);
-    tone(22, 139, 22);
+    tone(22, frets[buttonPushCounter][1][4], 20);
+    
   }
+
+
+  // Bottom Row
+  else if (mcp.digitalRead(12) == 0) { // Open
+    digitalWrite(13, HIGH);
+    tone(22, frets[buttonPushCounter][0][0], 20);
+  }
+  else if (mcp.digitalRead(11) == 0) { // Fret 1
+    digitalWrite(13, HIGH);
+    tone(22, frets[buttonPushCounter][0][1], 20);
+  }
+  else if (mcp.digitalRead(10) == 0) { // Fret 2
+    digitalWrite(13, HIGH);
+    tone(22, frets[buttonPushCounter][0][2], 20);
+  }
+  else if (mcp.digitalRead(9) == 0) { // Fret 3
+    digitalWrite(13, HIGH);
+    tone(22, frets[buttonPushCounter][0][3], 20);
+  }
+  else if (mcp.digitalRead(8) == 0) { // Fret 4
+    digitalWrite(13, HIGH);
+    tone(22, frets[buttonPushCounter][0][4], 20);
+  }
+
   else {
     digitalWrite(13, LOW);
   }
@@ -210,6 +290,8 @@ void loop() {
 
 
   //Serial.print(mcp.digitalRead(8));
+  //Serial.print(" ");
+  //Serial.print(frets[0][1][4]);
   //delay(1000);
 
 }
