@@ -82,7 +82,7 @@ void setup() {
   //display.setFont(&FreeSerifBold24pt7b);
   display.setFont(&FreeSerifBold9pt7b);
   //display.setCursor(0, 0);
-  display.setCursor(4, 32);
+  display.setCursor(4, 28);
   display.print("Guitar Tuner");
   //  display.print("Connecting to SSID\n'adafruit':");
   //  display.print("connected!");
@@ -382,15 +382,84 @@ void loop() {
       }
 
       else if (frequency >= dgMidPoint && frequency < gbMidPoint) { // G: 200.32
+
         display.print("G");
+
+        // Left Side
+        if (frequency > dgMidPoint && frequency < ((noteG - dgMidPoint) / 3) + dgMidPoint) {
+          displayLeftMost();
+        }
+        if (frequency >= ((noteG - dgMidPoint) / 3) + dgMidPoint && frequency < (((noteG - dgMidPoint) / 3) * 2) + dgMidPoint) {
+          displayLeftMiddle();
+        }
+        if (frequency >= (((noteG - dgMidPoint) / 3) * 2) + dgMidPoint && frequency < (noteG - tolerance)) {
+          displayRightMostLeft();
+        }
+
+        // Right Side
+        if (frequency > (noteG + tolerance) && frequency <= ((gbMidPoint - noteG) / 3) + noteG) {
+          displayLeftMostRight();
+        }
+        if (frequency > ((gbMidPoint - noteG) / 3) + noteG && frequency <= (((gbMidPoint - noteG) / 3) * 2) + noteG) {
+          displayRightMiddle();
+        }
+        if (frequency > (((gbMidPoint - noteG) / 3) * 2) + noteG && frequency <= gbMidPoint) {
+          displayRightMost();
+        }
       }
 
       else if (frequency >= gbMidPoint && frequency < beMidPoint) { // B: 253.04
+
         display.print("B");
+
+        // Left Side
+        if (frequency > gbMidPoint && frequency < ((noteB - gbMidPoint) / 3) + gbMidPoint) {
+          displayLeftMost();
+        }
+        if (frequency >= ((noteB - gbMidPoint) / 3) + gbMidPoint && frequency < (((noteB - gbMidPoint) / 3) * 2) + gbMidPoint) {
+          displayLeftMiddle();
+        }
+        if (frequency >= (((noteB - gbMidPoint) / 3) * 2) + gbMidPoint && frequency < (noteB - tolerance)) {
+          displayRightMostLeft();
+        }
+
+        // Right Side
+        if (frequency > (noteB + tolerance) && frequency <= ((beMidPoint - noteB) / 3) + noteB) {
+          displayLeftMostRight();
+        }
+        if (frequency > ((beMidPoint - noteB) / 3) + noteB && frequency <= (((beMidPoint - noteB) / 3) * 2) + noteB) {
+          displayRightMiddle();
+        }
+        if (frequency > (((beMidPoint - noteB) / 3) * 2) + noteB && frequency <= beMidPoint) {
+          displayRightMost();
+        }
       }
 
       else if (frequency >= beMidPoint) { // E: 337.39
+
         display.print("E");
+
+        // Left Side
+        if (frequency > beMidPoint && frequency < ((noteHighE - beMidPoint) / 3) + beMidPoint) {
+          displayLeftMost();
+        }
+        if (frequency >= ((noteHighE - beMidPoint) / 3) + beMidPoint && frequency < (((noteHighE - beMidPoint) / 3) * 2) + beMidPoint) {
+          displayLeftMiddle();
+        }
+        if (frequency >= (((noteHighE - beMidPoint) / 3) * 2) + beMidPoint && frequency < (noteHighE - tolerance)) {
+          displayRightMostLeft();
+        }
+
+        // Right Side
+        if (frequency > (noteHighE + tolerance) && frequency <= (((noteHighE + 25) - noteHighE) / 3) + noteHighE) {
+          displayLeftMostRight();
+        }
+        if (frequency > (((noteHighE + 25) - noteHighE) / 3) + noteHighE && frequency <= ((((noteHighE + 25) - noteHighE) / 3) * 2) + noteHighE) {
+          displayRightMiddle();
+        }
+        if (frequency > ((((noteHighE + 25) - noteHighE) / 3) * 2) + noteHighE && frequency <= (noteHighE + 25)) {
+          displayRightMost();
+        }
       }
 
       //display.fillRect(8, 4, 8, 28, WHITE);
