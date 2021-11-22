@@ -1,10 +1,28 @@
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
-#include <Fonts/FreeSerifBold24pt7b.h> // Font
+#include <Fonts/FreeSerifBold9pt7b.h> // Font
+//#include <Fonts/FreeSerifBold24pt7b.h> // Font
+#include <Fonts/FreeSerifBold18pt7b.h>
 #include <Adafruit_SSD1306.h>
 
 Adafruit_SSD1306 display = Adafruit_SSD1306(128, 32, &Wire);
+
+//Notes:
+// D: 75.71
+// E: 84.35
+// A: 112.46
+// D: 149.08
+// G: 200.32
+// B: 253.04
+// E: 337.39
+const int noteDropD = 75.71;
+const int noteLowE = 84.35;
+const int noteA = 112.46;
+const int noteD = 149.08;
+const int noteG = 200.32;
+const int noteB = 253.04;
+const int noteHighE = 337.39;
 
 //clipping indicator variables
 boolean clipping = 0;
@@ -39,12 +57,12 @@ void setup() {
 
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C); // Address 0x3C for 128x32
 
-  display.display();
-  delay(1000);
+  //  display.display();
+  //  delay(1000);
 
   // Clear the buffer.
   display.clearDisplay();
-  display.display();
+  //display.display();
 
   pinMode(13, OUTPUT); //led indicator pin
   pinMode(12, OUTPUT); //output pin
@@ -52,14 +70,18 @@ void setup() {
   // text display tests
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
-  display.setFont(&FreeSerifBold24pt7b);
-  display.setCursor(0, 0);
+  //display.setFont(&FreeSerifBold24pt7b);
+  display.setFont(&FreeSerifBold9pt7b);
+  //display.setCursor(0, 0);
+  display.setCursor(4, 32);
+  display.print("Guitar Tuner");
   //  display.print("Connecting to SSID\n'adafruit':");
   //  display.print("connected!");
   //  display.println("IP: 10.0.1.23");
   //  display.println("Sending val #0");
   //  display.setCursor(0, 0);
   display.display(); // actually display all of the above
+  delay(1000);
 
   cli();//diable interrupts
 
@@ -193,45 +215,63 @@ void loop() {
     // G: 200.32
     // B: 253.04
     // E: 337.39
-    //
-    //    display.setTextSize(1);
-    //    display.setTextColor(SSD1306_WHITE);
-    //    display.setCursor(0, 0);
-    //    display.print("Hz: ");
-    //    display.print(frequency);
-    //    display.setCursor(0, 0);
-    //    display.display(); // actually display all of the above
+    //const int noteDropD = 75.71;
+    //const int noteLowE = 84.35;
+    //const int noteA = 112.46;
+    //const int noteD = 149.08;
+    //const int noteG = 200.32;
+    //const int noteB = 253.04;
+    //const int noteHighE = 337.39;
+
+    frequency = frequency / 2; // Running at 8MHz instead of 16MHz so frequency is doubled
     if (frequency > 65) {
       display.clearDisplay();
-      display.setCursor(56, 10);
-      if(frequency > 65 && frequency < 80.03){ // D: 75.71
+      display.setCursor(69, 30);
+      display.setFont(&FreeSerifBold18pt7b);
+      if (frequency > 65 && frequency < (noteDropD + noteLowE)/2) { // D: 75.71
         display.print("D");
+        if(frequency > 65 && frequency < (noteDropD + noteLowE)/3){
+          display.fillRect(8, 4, 8, 28, WHITE); // Left most block
+        }
+        if(frequency >=
       }
-      else if(frequency >= 80.03 && frequency < 98.405){ // E: 84.35
+      else if (frequency >= (noteDropD + noteLowE)/2 && frequency < (noteLowE + noteA)/2) { // E: 84.35
         display.print("E");
       }
-      else if(frequency >= 98.405 && frequency < 130.77){ // A: 112.46
+      else if (frequency >= (noteLowE + noteA)/2 && frequency < (noteA + noteD)/2) { // A: 112.46
         display.print("A");
       }
-      else if(frequency >= 130.77 && frequency < 174.7){ // D: 149.08
+      else if (frequency >= (noteA + noteD)/2 && frequency < (noteD + noteG)/2) { // D: 149.08
         display.print("D");
       }
-      else if(frequency >= 174.7 && frequency < 226.68){ // G: 200.32
+      else if (frequency >= (noteD + noteG)/2 && frequency < (noteG + noteB)/2) { // G: 200.32
         display.print("G");
       }
-      else if(frequency >= 226.68 && frequency < 295.215){ // B: 253.04
+      else if (frequency >= (noteG + noteB)/2 && frequency < (noteB + noteHighE)/2) { // B: 253.04
         display.print("B");
       }
-      else if(frequency >= 295.215){ // E: 337.39
+      else if (frequency >= (noteB + noteHighE)/2) { // E: 337.39
         display.print("E");
       }
-      display.fillRect(10, 10, 10, 10, WHITE);
+      display.fillRect(8, 4, 8, 28, WHITE);
+      display.fillRect(22, 4, 8, 28, WHITE);
+      display.fillRect(36, 4, 8, 28, WHITE);
+
+      display.fillRect(84, 4, 8, 28, WHITE);
+      display.fillRect(98, 4, 8, 28, WHITE);
+      display.fillRect(112, 4, 8, 28, WHITE);
       //      display.print("Hz: ");
       //      display.print(frequency / 2);
       //      display.print(" | ");
       //      display
 
       //delay(10);
+      //      display.setCursor(40, 32);
+      //      display.setFont(&FreeSerifBold9pt7b);
+      //      display.print("Hz: ");
+      //      if (frequency > 65 && frequency < 500) {
+      //        display.print(frequency);
+      //      }
       yield();
       display.display();
     }
