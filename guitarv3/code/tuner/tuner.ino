@@ -1,6 +1,7 @@
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
+#include <Fonts/FreeSerifBold24pt7b.h> // Font
 #include <Adafruit_SSD1306.h>
 
 Adafruit_SSD1306 display = Adafruit_SSD1306(128, 32, &Wire);
@@ -51,12 +52,13 @@ void setup() {
   // text display tests
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
+  display.setFont(&FreeSerifBold24pt7b);
   display.setCursor(0, 0);
-  display.print("Connecting to SSID\n'adafruit':");
-  display.print("connected!");
-  display.println("IP: 10.0.1.23");
-  display.println("Sending val #0");
-  display.setCursor(0, 0);
+  //  display.print("Connecting to SSID\n'adafruit':");
+  //  display.print("connected!");
+  //  display.println("IP: 10.0.1.23");
+  //  display.println("Sending val #0");
+  //  display.setCursor(0, 0);
   display.display(); // actually display all of the above
 
   cli();//diable interrupts
@@ -173,34 +175,66 @@ void loop() {
     frequency = 38462 / float(period); //calculate frequency timer rate/period
 
     //print results
-    display.setCursor(0, 10);
+
     Serial.print(frequency);
     Serial.println(" hz");
-    
-    display.clearDisplay();
+
+
     //display.display();
 
+    // These are off by a bit than what it says online
+    // I printed the frequency first and matched it to a commercial tuner
+    //
     //Notes:
-    // Drop D: 75.71
+    // D: 75.71
     // E: 84.35
     // A: 112.46
     // D: 149.08
     // G: 200.32
     // B: 253.04
     // E: 337.39
-//
-//    display.setTextSize(1);
-//    display.setTextColor(SSD1306_WHITE);
-//    display.setCursor(0, 0);
-//    display.print("Hz: ");
-//    display.print(frequency);
-//    display.setCursor(0, 0);
-//    display.display(); // actually display all of the above
-    display.print("Hz: ");
-    display.print(frequency/2);
-    //delay(10);
-    yield();
-    display.display();
+    //
+    //    display.setTextSize(1);
+    //    display.setTextColor(SSD1306_WHITE);
+    //    display.setCursor(0, 0);
+    //    display.print("Hz: ");
+    //    display.print(frequency);
+    //    display.setCursor(0, 0);
+    //    display.display(); // actually display all of the above
+    if (frequency > 65) {
+      display.clearDisplay();
+      display.setCursor(56, 10);
+      if(frequency > 65 && frequency < 80.03){ // D: 75.71
+        display.print("D");
+      }
+      else if(frequency >= 80.03 && frequency < 98.405){ // E: 84.35
+        display.print("E");
+      }
+      else if(frequency >= 98.405 && frequency < 130.77){ // A: 112.46
+        display.print("A");
+      }
+      else if(frequency >= 130.77 && frequency < 174.7){ // D: 149.08
+        display.print("D");
+      }
+      else if(frequency >= 174.7 && frequency < 226.68){ // G: 200.32
+        display.print("G");
+      }
+      else if(frequency >= 226.68 && frequency < 295.215){ // B: 253.04
+        display.print("B");
+      }
+      else if(frequency >= 295.215){ // E: 337.39
+        display.print("E");
+      }
+      display.fillRect(10, 10, 10, 10, WHITE);
+      //      display.print("Hz: ");
+      //      display.print(frequency / 2);
+      //      display.print(" | ");
+      //      display
+
+      //delay(10);
+      yield();
+      display.display();
+    }
   }
 
 
