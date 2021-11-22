@@ -303,6 +303,7 @@ void loop() {
       else if (frequency >= deMidPoint && frequency < eaMidPoint) { // E: 84.35
 
         display.print("E");
+
         // Left Side
         if (frequency > deMidPoint && frequency < ((noteLowE - deMidPoint) / 3) + deMidPoint) {
           displayLeftMost();
@@ -310,12 +311,12 @@ void loop() {
         if (frequency >= ((noteLowE - deMidPoint) / 3) + deMidPoint && frequency < (((noteLowE - deMidPoint) / 3) * 2) + deMidPoint) {
           displayLeftMiddle();
         }
-        if (frequency >= (((noteLowE - deMidPoint) / 3) * 2) + deMidPoint && frequency < (noteLowE - 1)) {
+        if (frequency >= (((noteLowE - deMidPoint) / 3) * 2) + deMidPoint && frequency < (noteLowE - tolerance)) {
           displayRightMostLeft();
         }
 
         // Right Side
-        if (frequency > (noteLowE + 1) && frequency <= ((eaMidPoint - noteLowE) / 3) + noteLowE) {
+        if (frequency > (noteLowE + tolerance) && frequency <= ((eaMidPoint - noteLowE) / 3) + noteLowE) {
           displayLeftMostRight();
         }
         if (frequency > ((eaMidPoint - noteLowE) / 3) + noteLowE && frequency <= (((eaMidPoint - noteLowE) / 3) * 2) + noteLowE) {
@@ -327,11 +328,57 @@ void loop() {
       }
 
       else if (frequency >= eaMidPoint && frequency < adMidPoint) { // A: 112.46
+
         display.print("A");
+
+        // Left Side
+        if (frequency > eaMidPoint && frequency < ((noteA - eaMidPoint) / 3) + eaMidPoint) {
+          displayLeftMost();
+        }
+        if (frequency >= ((noteA - eaMidPoint) / 3) + eaMidPoint && frequency < (((noteA - eaMidPoint) / 3) * 2) + eaMidPoint) {
+          displayLeftMiddle();
+        }
+        if (frequency >= (((noteA - eaMidPoint) / 3) * 2) + eaMidPoint && frequency < (noteA - tolerance)) {
+          displayRightMostLeft();
+        }
+
+        // Right Side
+        if (frequency > (noteA + tolerance) && frequency <= ((adMidPoint - noteA) / 3) + noteA) {
+          displayLeftMostRight();
+        }
+        if (frequency > ((adMidPoint - noteA) / 3) + noteA && frequency <= (((adMidPoint - noteA) / 3) * 2) + noteA) {
+          displayRightMiddle();
+        }
+        if (frequency > (((adMidPoint - noteA) / 3) * 2) + noteA && frequency <= adMidPoint) {
+          displayRightMost();
+        }
       }
 
       else if (frequency >= adMidPoint && frequency < dgMidPoint) { // D: 149.08
+
         display.print("D");
+
+        // Left Side
+        if (frequency > adMidPoint && frequency < ((noteD - adMidPoint) / 3) + adMidPoint) {
+          displayLeftMost();
+        }
+        if (frequency >= ((noteD - adMidPoint) / 3) + adMidPoint && frequency < (((noteD - adMidPoint) / 3) * 2) + adMidPoint) {
+          displayLeftMiddle();
+        }
+        if (frequency >= (((noteD - adMidPoint) / 3) * 2) + adMidPoint && frequency < (noteD - tolerance)) {
+          displayRightMostLeft();
+        }
+
+        // Right Side
+        if (frequency > (noteD + tolerance) && frequency <= ((dgMidPoint - noteD) / 3) + noteD) {
+          displayLeftMostRight();
+        }
+        if (frequency > ((dgMidPoint - noteD) / 3) + noteD && frequency <= (((dgMidPoint - noteD) / 3) * 2) + noteD) {
+          displayRightMiddle();
+        }
+        if (frequency > (((dgMidPoint - noteD) / 3) * 2) + noteD && frequency <= dgMidPoint) {
+          displayRightMost();
+        }
       }
 
       else if (frequency >= dgMidPoint && frequency < gbMidPoint) { // G: 200.32
