@@ -31,7 +31,7 @@ const double dgMidPoint = (noteD + noteG) / 2;
 const double gbMidPoint = (noteG + noteB) / 2;
 const double beMidPoint = (noteB + noteHighE) / 2;
 
-const double tolerance = 0.25; // Hz amount that note can be off for it to still register as correct note
+const double tolerance = 0.50; // Hz amount that note can be off for it to still register as correct note
 
 //clipping indicator variables
 boolean clipping = 0;
@@ -296,194 +296,39 @@ void loop() {
       display.setFont(&FreeSerifBold18pt7b);
 
       if (frequency > 65 && frequency < deMidPoint) { // D: 75.71
-
         display.print("D");
 
-        // Left Side
-        if (frequency > 65 && frequency < ((noteDropD - 65) / 3) + 65) {
-          displayLeftMost();
-        }
-        if (frequency >= ((noteDropD - 65) / 3) + 65 && frequency < (((noteDropD - 65) / 3) * 2) + 65) {
-          displayLeftMiddle();
-        }
-        if (frequency >= (((noteDropD - 65) / 3) * 2) + 65 && frequency < (noteDropD - tolerance)) {
-          displayRightMostLeft();
-        }
-
-        // Right Side
-        if (frequency > (noteDropD + tolerance) && frequency <= ((deMidPoint - noteDropD) / 3) + noteDropD) {
-          displayLeftMostRight();
-        }
-        if (frequency > ((deMidPoint - noteDropD) / 3) + noteDropD && frequency <= (((deMidPoint - noteDropD) / 3) * 2) + noteDropD) {
-          displayRightMiddle();
-        }
-        if (frequency > (((deMidPoint - noteDropD) / 3) * 2) + noteDropD && frequency <= deMidPoint) {
-          displayRightMost();
-        }
+        displayBars(noteDropD, 65, deMidPoint);
       }
-
-
-
       else if (frequency >= deMidPoint && frequency < eaMidPoint) { // E: 84.35
-
         display.print("E");
 
-        // Left Side
-        if (frequency > deMidPoint && frequency < ((noteLowE - deMidPoint) / 3) + deMidPoint) {
-          displayLeftMost();
-        }
-        if (frequency >= ((noteLowE - deMidPoint) / 3) + deMidPoint && frequency < (((noteLowE - deMidPoint) / 3) * 2) + deMidPoint) {
-          displayLeftMiddle();
-        }
-        if (frequency >= (((noteLowE - deMidPoint) / 3) * 2) + deMidPoint && frequency < (noteLowE - tolerance)) {
-          displayRightMostLeft();
-        }
-
-        // Right Side
-        if (frequency > (noteLowE + tolerance) && frequency <= ((eaMidPoint - noteLowE) / 3) + noteLowE) {
-          displayLeftMostRight();
-        }
-        if (frequency > ((eaMidPoint - noteLowE) / 3) + noteLowE && frequency <= (((eaMidPoint - noteLowE) / 3) * 2) + noteLowE) {
-          displayRightMiddle();
-        }
-        if (frequency > (((eaMidPoint - noteLowE) / 3) * 2) + noteLowE && frequency <= eaMidPoint) {
-          displayRightMost();
-        }
+        displayBars(noteLowE, deMidPoint, eaMidPoint);
       }
-
       else if (frequency >= eaMidPoint && frequency < adMidPoint) { // A: 112.46
-
         display.print("A");
 
-        // Left Side
-        if (frequency > eaMidPoint && frequency < ((noteA - eaMidPoint) / 3) + eaMidPoint) {
-          displayLeftMost();
-        }
-        if (frequency >= ((noteA - eaMidPoint) / 3) + eaMidPoint && frequency < (((noteA - eaMidPoint) / 3) * 2) + eaMidPoint) {
-          displayLeftMiddle();
-        }
-        if (frequency >= (((noteA - eaMidPoint) / 3) * 2) + eaMidPoint && frequency < (noteA - tolerance)) {
-          displayRightMostLeft();
-        }
-
-        // Right Side
-        if (frequency > (noteA + tolerance) && frequency <= ((adMidPoint - noteA) / 3) + noteA) {
-          displayLeftMostRight();
-        }
-        if (frequency > ((adMidPoint - noteA) / 3) + noteA && frequency <= (((adMidPoint - noteA) / 3) * 2) + noteA) {
-          displayRightMiddle();
-        }
-        if (frequency > (((adMidPoint - noteA) / 3) * 2) + noteA && frequency <= adMidPoint) {
-          displayRightMost();
-        }
+        displayBars(noteA, eaMidPoint, adMidPoint);
       }
-
       else if (frequency >= adMidPoint && frequency < dgMidPoint) { // D: 149.08
-
         display.print("D");
 
-        // Left Side
-        if (frequency > adMidPoint && frequency < ((noteD - adMidPoint) / 3) + adMidPoint) {
-          displayLeftMost();
-        }
-        if (frequency >= ((noteD - adMidPoint) / 3) + adMidPoint && frequency < (((noteD - adMidPoint) / 3) * 2) + adMidPoint) {
-          displayLeftMiddle();
-        }
-        if (frequency >= (((noteD - adMidPoint) / 3) * 2) + adMidPoint && frequency < (noteD - tolerance)) {
-          displayRightMostLeft();
-        }
-
-        // Right Side
-        if (frequency > (noteD + tolerance) && frequency <= ((dgMidPoint - noteD) / 3) + noteD) {
-          displayLeftMostRight();
-        }
-        if (frequency > ((dgMidPoint - noteD) / 3) + noteD && frequency <= (((dgMidPoint - noteD) / 3) * 2) + noteD) {
-          displayRightMiddle();
-        }
-        if (frequency > (((dgMidPoint - noteD) / 3) * 2) + noteD && frequency <= dgMidPoint) {
-          displayRightMost();
-        }
+        displayBars(noteD, adMidPoint, dgMidPoint);
       }
-
       else if (frequency >= dgMidPoint && frequency < gbMidPoint) { // G: 200.32
-
         display.print("G");
 
-        // Left Side
-        if (frequency > dgMidPoint && frequency < ((noteG - dgMidPoint) / 3) + dgMidPoint) {
-          displayLeftMost();
-        }
-        if (frequency >= ((noteG - dgMidPoint) / 3) + dgMidPoint && frequency < (((noteG - dgMidPoint) / 3) * 2) + dgMidPoint) {
-          displayLeftMiddle();
-        }
-        if (frequency >= (((noteG - dgMidPoint) / 3) * 2) + dgMidPoint && frequency < (noteG - tolerance)) {
-          displayRightMostLeft();
-        }
-
-        // Right Side
-        if (frequency > (noteG + tolerance) && frequency <= ((gbMidPoint - noteG) / 3) + noteG) {
-          displayLeftMostRight();
-        }
-        if (frequency > ((gbMidPoint - noteG) / 3) + noteG && frequency <= (((gbMidPoint - noteG) / 3) * 2) + noteG) {
-          displayRightMiddle();
-        }
-        if (frequency > (((gbMidPoint - noteG) / 3) * 2) + noteG && frequency <= gbMidPoint) {
-          displayRightMost();
-        }
+        displayBars(noteG, dgMidPoint, gbMidPoint);
       }
-
       else if (frequency >= gbMidPoint && frequency < beMidPoint) { // B: 253.04
-
         display.print("B");
 
-        // Left Side
-        if (frequency > gbMidPoint && frequency < ((noteB - gbMidPoint) / 3) + gbMidPoint) {
-          displayLeftMost();
-        }
-        if (frequency >= ((noteB - gbMidPoint) / 3) + gbMidPoint && frequency < (((noteB - gbMidPoint) / 3) * 2) + gbMidPoint) {
-          displayLeftMiddle();
-        }
-        if (frequency >= (((noteB - gbMidPoint) / 3) * 2) + gbMidPoint && frequency < (noteB - tolerance)) {
-          displayRightMostLeft();
-        }
-
-        // Right Side
-        if (frequency > (noteB + tolerance) && frequency <= ((beMidPoint - noteB) / 3) + noteB) {
-          displayLeftMostRight();
-        }
-        if (frequency > ((beMidPoint - noteB) / 3) + noteB && frequency <= (((beMidPoint - noteB) / 3) * 2) + noteB) {
-          displayRightMiddle();
-        }
-        if (frequency > (((beMidPoint - noteB) / 3) * 2) + noteB && frequency <= beMidPoint) {
-          displayRightMost();
-        }
+        displayBars(noteB, gbMidPoint, beMidPoint);
       }
-
       else if (frequency >= beMidPoint) { // E: 337.39
-
         display.print("E");
 
-        // Left Side
-        if (frequency > beMidPoint && frequency < ((noteHighE - beMidPoint) / 3) + beMidPoint) {
-          displayLeftMost();
-        }
-        if (frequency >= ((noteHighE - beMidPoint) / 3) + beMidPoint && frequency < (((noteHighE - beMidPoint) / 3) * 2) + beMidPoint) {
-          displayLeftMiddle();
-        }
-        if (frequency >= (((noteHighE - beMidPoint) / 3) * 2) + beMidPoint && frequency < (noteHighE - tolerance)) {
-          displayRightMostLeft();
-        }
-
-        // Right Side
-        if (frequency > (noteHighE + tolerance) && frequency <= (((noteHighE + 25) - noteHighE) / 3) + noteHighE) {
-          displayLeftMostRight();
-        }
-        if (frequency > (((noteHighE + 25) - noteHighE) / 3) + noteHighE && frequency <= ((((noteHighE + 25) - noteHighE) / 3) * 2) + noteHighE) {
-          displayRightMiddle();
-        }
-        if (frequency > ((((noteHighE + 25) - noteHighE) / 3) * 2) + noteHighE && frequency <= (noteHighE + 25)) {
-          displayRightMost();
-        }
+        displayBars(noteHighE, beMidPoint, noteHighE + 25);
       }
 
       //display.fillRect(8, 4, 8, 28, WHITE);
