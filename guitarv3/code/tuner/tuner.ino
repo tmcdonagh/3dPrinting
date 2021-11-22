@@ -24,6 +24,15 @@ const double noteG = 200.32;
 const double noteB = 253.04;
 const double noteHighE = 337.39;
 
+const double deMidPoint = (noteDropD + noteLowE) / 2;
+const double eaMidPoint = (noteLowE + noteA) / 2;
+const double adMidPoint = (noteA + noteD) / 2;
+const double dgMidPoint = (noteD + noteG) / 2;
+const double gbMidPoint = (noteG + noteB) / 2;
+const double beMidPoint = (noteB + noteHighE) / 2;
+
+const double tolerance = 0.25; // Hz amount that note can be off for it to still register as correct note
+
 //clipping indicator variables
 boolean clipping = 0;
 
@@ -187,6 +196,32 @@ void checkClipping() { //manage clipping indication
   }
 }
 
+void displayLeftMost() {
+  display.fillRect(8, 4, 8, 28, WHITE); // Leftmost block
+  display.fillRect(22, 4, 8, 28, WHITE); // Left middle block
+  display.fillRect(36, 4, 8, 28, WHITE); // Rightmost left block
+}
+void displayLeftMiddle() {
+  display.fillRect(22, 4, 8, 28, WHITE); // Left middle block
+  display.fillRect(36, 4, 8, 28, WHITE); // Rightmost left block
+}
+void displayRightMostLeft() {
+  display.fillRect(36, 4, 8, 28, WHITE); // Rightmost left block
+}
+
+void displayLeftMostRight() {
+  display.fillRect(84, 4, 8, 28, WHITE); // Leftmost right block
+}
+void displayRightMiddle() {
+  display.fillRect(84, 4, 8, 28, WHITE); // Leftmost right block
+  display.fillRect(98, 4, 8, 28, WHITE); // Right middle block
+}
+void displayRightMost() {
+  display.fillRect(84, 4, 8, 28, WHITE); // Leftmost right block
+  display.fillRect(98, 4, 8, 28, WHITE); // Right middle block
+  display.fillRect(112, 4, 8, 28, WHITE); // Rightmost block
+}
+
 
 void loop() {
 
@@ -223,43 +258,72 @@ void loop() {
     //const int noteB = 253.04;
     //const int noteHighE = 337.39;
 
-    double deMidPoint = (noteDropD + noteLowE)/2;
-    double eaMidPoint = (noteLowE + noteA)/2;
-    double adMidPoint = (noteA + noteD)/2;
-    double dgMidPoint = (noteD + noteG)/2;
-    double gbMidPoint = (noteG + noteB)/2;
-    double beMidPoint = (noteB + noteHighE)/2;
+    //    double deMidPoint = (noteDropD + noteLowE) / 2;
+    //    double eaMidPoint = (noteLowE + noteA) / 2;
+    //    double adMidPoint = (noteA + noteD) / 2;
+    //    double dgMidPoint = (noteD + noteG) / 2;
+    //    double gbMidPoint = (noteG + noteB) / 2;
+    //    double beMidPoint = (noteB + noteHighE) / 2;
 
     frequency = frequency / 2; // Running at 8MHz instead of 16MHz so frequency is doubled
     if (frequency > 65) {
       display.clearDisplay();
-      display.setCursor(69, 30);
+      display.setCursor(60, 29);
       display.setFont(&FreeSerifBold18pt7b);
+
       if (frequency > 65 && frequency < deMidPoint) { // D: 75.71
+
         display.print("D");
+
         // Left Side
-        if (frequency > 65 && frequency < (noteDropD + noteLowE) / 3) {
-          display.fillRect(8, 4, 8, 28, WHITE); // Leftmost block
+        if (frequency > 65 && frequency < ((noteDropD - 65) / 3) + 65) {
+          displayLeftMost();
         }
-        if (frequency >= (noteDropD + noteLowE) / 3 && frequency < ((noteDropD + noteLowE) / 3) * 2) {
-          display.fillRect(22, 4, 8, 28, WHITE); // Left middle block
+        if (frequency >= ((noteDropD - 65) / 3) + 65 && frequency < (((noteDropD - 65) / 3) * 2) + 65) {
+          displayLeftMiddle();
         }
-        if (frequency >= ((noteDropD + noteLowE) / 3) * 2 && frequency < (noteLowE - 1)) {
-          display.fillRect(36, 4, 8, 28, WHITE); // Rightmost left block
+        if (frequency >= (((noteDropD - 65) / 3) * 2) + 65 && frequency < (noteDropD - tolerance)) {
+          displayRightMostLeft();
         }
+
         // Right Side
-        if (frequency > (noteLowE + 1) && frequency <= (noteLowE + noteA) / 3) {
-          display.fillRect(84, 4, 8, 28, WHITE); // Leftmost right block
+        if (frequency > (noteDropD + tolerance) && frequency <= ((deMidPoint - noteDropD) / 3) + noteDropD) {
+          displayLeftMostRight();
         }
-        if (frequency > (noteLowE + noteA) / 3 && frequency <= ((noteLowE + noteA) / 3) * 2) {
-          display.fillRect(98, 4, 8, 28, WHITE); // Right middle block
+        if (frequency > ((deMidPoint - noteDropD) / 3) + noteDropD && frequency <= (((deMidPoint - noteDropD) / 3) * 2) + noteDropD) {
+          displayRightMiddle();
         }
-        if (frequency > ((noteLowE + noteA) / 3) * 2 && frequency <= note
+        if (frequency > (((deMidPoint - noteDropD) / 3) * 2) + noteDropD && frequency <= deMidPoint) {
+          displayRightMost();
+        }
       }
 
 
-    else if (frequency >= deMidPoint && frequency < eaMidPoint { // E: 84.35
+
+      else if (frequency >= deMidPoint && frequency < eaMidPoint) { // E: 84.35
+
         display.print("E");
+        // Left Side
+        if (frequency > deMidPoint && frequency < ((noteLowE - deMidPoint) / 3) + deMidPoint) {
+          displayLeftMost();
+        }
+        if (frequency >= ((noteLowE - deMidPoint) / 3) + deMidPoint && frequency < (((noteLowE - deMidPoint) / 3) * 2) + deMidPoint) {
+          displayLeftMiddle();
+        }
+        if (frequency >= (((noteLowE - deMidPoint) / 3) * 2) + deMidPoint && frequency < (noteLowE - 1)) {
+          displayRightMostLeft();
+        }
+
+        // Right Side
+        if (frequency > (noteLowE + 1) && frequency <= ((eaMidPoint - noteLowE) / 3) + noteLowE) {
+          displayLeftMostRight();
+        }
+        if (frequency > ((eaMidPoint - noteLowE) / 3) + noteLowE && frequency <= (((eaMidPoint - noteLowE) / 3) * 2) + noteLowE) {
+          displayRightMiddle();
+        }
+        if (frequency > (((eaMidPoint - noteLowE) / 3) * 2) + noteLowE && frequency <= eaMidPoint) {
+          displayRightMost();
+        }
       }
 
       else if (frequency >= eaMidPoint && frequency < adMidPoint) { // A: 112.46
@@ -286,9 +350,10 @@ void loop() {
       //display.fillRect(22, 4, 8, 28, WHITE);
       //display.fillRect(36, 4, 8, 28, WHITE);
 
-      display.fillRect(84, 4, 8, 28, WHITE);
-      display.fillRect(98, 4, 8, 28, WHITE);
-      display.fillRect(112, 4, 8, 28, WHITE);
+      //display.fillRect(84, 4, 8, 28, WHITE);
+      //display.fillRect(98, 4, 8, 28, WHITE);
+      //display.fillRect(112, 4, 8, 28, WHITE);
+
       //      display.print("Hz: ");
       //      display.print(frequency / 2);
       //      display.print(" | ");
