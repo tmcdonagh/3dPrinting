@@ -82,7 +82,7 @@ void setup() {
   //display.setFont(&FreeSerifBold24pt7b);
   display.setFont(&FreeSerifBold9pt7b);
   //display.setCursor(0, 0);
-  display.setCursor(4, 28);
+  display.setCursor(10, 22);
   display.print("Guitar Tuner");
   //  display.print("Connecting to SSID\n'adafruit':");
   //  display.print("connected!");
@@ -222,6 +222,30 @@ void displayRightMost() {
   display.fillRect(112, 4, 8, 28, WHITE); // Rightmost block
 }
 
+void displayBars(double note, double lowerLimit, double upperLimit) {
+  // Left Side
+  if (frequency > lowerLimit && frequency < ((note - lowerLimit) / 3) + lowerLimit) {
+    displayLeftMost();
+  }
+  if (frequency >= ((note - lowerLimit) / 3) + lowerLimit && frequency < (((note - lowerLimit) / 3) * 2) + lowerLimit) {
+    displayLeftMiddle();
+  }
+  if (frequency >= (((note - lowerLimit) / 3) * 2) + lowerLimit && frequency < (note - tolerance)) {
+    displayRightMostLeft();
+  }
+
+  // Right Side
+  if (frequency > (note + tolerance) && frequency <= ((upperLimit - note) / 3) + note) {
+    displayLeftMostRight();
+  }
+  if (frequency > ((upperLimit - note) / 3) + note && frequency <= (((upperLimit - note) / 3) * 2) + note) {
+    displayRightMiddle();
+  }
+  if (frequency > (((upperLimit - note) / 3) * 2) + note && frequency <= upperLimit) {
+    displayRightMost();
+  }
+}
+
 
 void loop() {
 
@@ -268,7 +292,7 @@ void loop() {
     frequency = frequency / 2; // Running at 8MHz instead of 16MHz so frequency is doubled
     if (frequency > 65) {
       display.clearDisplay();
-      display.setCursor(60, 29);
+      display.setCursor(51, 29);
       display.setFont(&FreeSerifBold18pt7b);
 
       if (frequency > 65 && frequency < deMidPoint) { // D: 75.71
