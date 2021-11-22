@@ -16,13 +16,13 @@ Adafruit_SSD1306 display = Adafruit_SSD1306(128, 32, &Wire);
 // G: 200.32
 // B: 253.04
 // E: 337.39
-const int noteDropD = 75.71;
-const int noteLowE = 84.35;
-const int noteA = 112.46;
-const int noteD = 149.08;
-const int noteG = 200.32;
-const int noteB = 253.04;
-const int noteHighE = 337.39;
+const double noteDropD = 75.71;
+const double noteLowE = 84.35;
+const double noteA = 112.46;
+const double noteD = 149.08;
+const double noteG = 200.32;
+const double noteB = 253.04;
+const double noteHighE = 337.39;
 
 //clipping indicator variables
 boolean clipping = 0;
@@ -223,39 +223,68 @@ void loop() {
     //const int noteB = 253.04;
     //const int noteHighE = 337.39;
 
+    double deMidPoint = (noteDropD + noteLowE)/2;
+    double eaMidPoint = (noteLowE + noteA)/2;
+    double adMidPoint = (noteA + noteD)/2;
+    double dgMidPoint = (noteD + noteG)/2;
+    double gbMidPoint = (noteG + noteB)/2;
+    double beMidPoint = (noteB + noteHighE)/2;
+
     frequency = frequency / 2; // Running at 8MHz instead of 16MHz so frequency is doubled
     if (frequency > 65) {
       display.clearDisplay();
       display.setCursor(69, 30);
       display.setFont(&FreeSerifBold18pt7b);
-      if (frequency > 65 && frequency < (noteDropD + noteLowE)/2) { // D: 75.71
+      if (frequency > 65 && frequency < deMidPoint) { // D: 75.71
         display.print("D");
-        if(frequency > 65 && frequency < (noteDropD + noteLowE)/3){
-          display.fillRect(8, 4, 8, 28, WHITE); // Left most block
+        // Left Side
+        if (frequency > 65 && frequency < (noteDropD + noteLowE) / 3) {
+          display.fillRect(8, 4, 8, 28, WHITE); // Leftmost block
         }
-        if(frequency >=
+        if (frequency >= (noteDropD + noteLowE) / 3 && frequency < ((noteDropD + noteLowE) / 3) * 2) {
+          display.fillRect(22, 4, 8, 28, WHITE); // Left middle block
+        }
+        if (frequency >= ((noteDropD + noteLowE) / 3) * 2 && frequency < (noteLowE - 1)) {
+          display.fillRect(36, 4, 8, 28, WHITE); // Rightmost left block
+        }
+        // Right Side
+        if (frequency > (noteLowE + 1) && frequency <= (noteLowE + noteA) / 3) {
+          display.fillRect(84, 4, 8, 28, WHITE); // Leftmost right block
+        }
+        if (frequency > (noteLowE + noteA) / 3 && frequency <= ((noteLowE + noteA) / 3) * 2) {
+          display.fillRect(98, 4, 8, 28, WHITE); // Right middle block
+        }
+        if (frequency > ((noteLowE + noteA) / 3) * 2 && frequency <= note
       }
-      else if (frequency >= (noteDropD + noteLowE)/2 && frequency < (noteLowE + noteA)/2) { // E: 84.35
+
+
+    else if (frequency >= deMidPoint && frequency < eaMidPoint { // E: 84.35
         display.print("E");
       }
-      else if (frequency >= (noteLowE + noteA)/2 && frequency < (noteA + noteD)/2) { // A: 112.46
+
+      else if (frequency >= eaMidPoint && frequency < adMidPoint) { // A: 112.46
         display.print("A");
       }
-      else if (frequency >= (noteA + noteD)/2 && frequency < (noteD + noteG)/2) { // D: 149.08
+
+      else if (frequency >= adMidPoint && frequency < dgMidPoint) { // D: 149.08
         display.print("D");
       }
-      else if (frequency >= (noteD + noteG)/2 && frequency < (noteG + noteB)/2) { // G: 200.32
+
+      else if (frequency >= dgMidPoint && frequency < gbMidPoint) { // G: 200.32
         display.print("G");
       }
-      else if (frequency >= (noteG + noteB)/2 && frequency < (noteB + noteHighE)/2) { // B: 253.04
+
+      else if (frequency >= gbMidPoint && frequency < beMidPoint) { // B: 253.04
         display.print("B");
       }
-      else if (frequency >= (noteB + noteHighE)/2) { // E: 337.39
+
+      else if (frequency >= beMidPoint) { // E: 337.39
         display.print("E");
       }
-      display.fillRect(8, 4, 8, 28, WHITE);
-      display.fillRect(22, 4, 8, 28, WHITE);
-      display.fillRect(36, 4, 8, 28, WHITE);
+
+      //display.fillRect(8, 4, 8, 28, WHITE);
+      //display.fillRect(22, 4, 8, 28, WHITE);
+      //display.fillRect(36, 4, 8, 28, WHITE);
 
       display.fillRect(84, 4, 8, 28, WHITE);
       display.fillRect(98, 4, 8, 28, WHITE);
