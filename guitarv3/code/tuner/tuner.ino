@@ -1,9 +1,11 @@
+// Thomas McDonagh 2021
+// Written for AtMega328P at 8MHz
+
 #include <AceButton.h> // Button handling
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Fonts/FreeSerifBold9pt7b.h> // Font
-//#include <Fonts/FreeSerifBold24pt7b.h> // Font
 #include <Fonts/FreeSerifBold18pt7b.h>
 #include <Adafruit_SSD1306.h>
 
@@ -17,14 +19,8 @@ void handleEvent(AceButton*, uint8_t, uint8_t);
 
 Adafruit_SSD1306 display = Adafruit_SSD1306(128, 32, &Wire);
 
-//Notes:
-// D: 75.71
-// E: 84.35
-// A: 112.46
-// D: 149.08
-// G: 200.32
-// B: 253.04
-// E: 337.39
+// Notes were set with trial and error
+// If I put the real Hz values it doesn't tune correctly
 const double noteDropD = 75.12;
 const double noteLowE = 83.98;
 const double noteA = 112.46;
@@ -76,7 +72,7 @@ byte ampThreshold = 30;//raise if you have a very noisy signal
 
 void setup() {
 
-  Serial.begin(9600);
+  //Serial.begin(9600);
 
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C); // Address 0x3C for 128x32
 
@@ -92,20 +88,9 @@ void setup() {
 
   // Clear the buffer.
   display.clearDisplay();
-  //display.display();
-
-  // text display tests
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
-  //  display.setFont(&FreeSerifBold24pt7b);
-  //  display.setFont(&FreeSerifBold9pt7b);
-  //  display.setCursor(10, 22);
-  //  display.print("Guitar Tuner");
-  //  display.print("Connecting to SSID\n'adafruit':");
-  //  display.print("connected!");
-  //  display.println("IP: 10.0.1.23");
-  //  display.println("Sending val #0");
-  //  display.setCursor(0, 0);
+
   display.display(); // actually display all of the above
   //  delay(1000);
 
@@ -321,35 +306,6 @@ void loop() {
     Serial.print(frequency);
     Serial.println(" hz");
 
-
-    //display.display();
-
-    // These are off by a bit than what it says online
-    // I printed the frequency first and matched it to a commercial tuner
-    //
-    //Notes:
-    // D: 75.71
-    // E: 84.35
-    // A: 112.46
-    // D: 149.08
-    // G: 200.32
-    // B: 253.04
-    // E: 337.39
-    //const int noteDropD = 75.71;
-    //const int noteLowE = 84.35;
-    //const int noteA = 112.46;
-    //const int noteD = 149.08;
-    //const int noteG = 200.32;
-    //const int noteB = 253.04;
-    //const int noteHighE = 337.39;
-
-    //    double deMidPoint = (noteDropD + noteLowE) / 2;
-    //    double eaMidPoint = (noteLowE + noteA) / 2;
-    //    double adMidPoint = (noteA + noteD) / 2;
-    //    double dgMidPoint = (noteD + noteG) / 2;
-    //    double gbMidPoint = (noteG + noteB) / 2;
-    //    double beMidPoint = (noteB + noteHighE) / 2;
-
     frequency = frequency / 2; // Running at 8MHz instead of 16MHz so frequency is doubled
     if (frequency > 65 && screenOn) {
       display.clearDisplay();
@@ -400,21 +356,6 @@ void loop() {
 
         displayBars(noteHighE, beMidPoint, noteHighE + 25);
       }
-
-      //display.fillRect(8, 4, 8, 28, WHITE);
-      //display.fillRect(22, 4, 8, 28, WHITE);
-      //display.fillRect(36, 4, 8, 28, WHITE);
-
-      //display.fillRect(84, 4, 8, 28, WHITE);
-      //display.fillRect(98, 4, 8, 28, WHITE);
-      //display.fillRect(112, 4, 8, 28, WHITE);
-
-      //      display.print("Hz: ");
-      //      display.print(frequency / 2);
-      //      display.print(" | ");
-      //      display
-
-      //delay(10);
       if (showHz) {
         display.setCursor(39, 31);
         display.setFont(&FreeSerifBold9pt7b);
@@ -423,13 +364,8 @@ void loop() {
           display.print(frequency);
         }
       }
-      yield();
+      //yield();
       display.display();
     }
   }
-
-
-
-  //delay(100);
-
-}
+} 
