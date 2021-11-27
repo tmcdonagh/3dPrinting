@@ -1,3 +1,4 @@
+#include <AceButton.h> // Button handling
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
@@ -5,6 +6,14 @@
 //#include <Fonts/FreeSerifBold24pt7b.h> // Font
 #include <Fonts/FreeSerifBold18pt7b.h>
 #include <Adafruit_SSD1306.h>
+
+using namespace ace_button;
+
+const int buttonPin = 6;
+
+AceButton button(buttonPin);
+
+void handleEvent(AceButton*, uint8_t, uint8_t);
 
 Adafruit_SSD1306 display = Adafruit_SSD1306(128, 32, &Wire);
 
@@ -16,10 +25,10 @@ Adafruit_SSD1306 display = Adafruit_SSD1306(128, 32, &Wire);
 // G: 200.32
 // B: 253.04
 // E: 337.39
-const double noteDropD = 75.71;
-const double noteLowE = 84.35;
+const double noteDropD = 75.12;
+const double noteLowE = 83.98;
 const double noteA = 112.46;
-const double noteD = 149.08;
+const double noteD = 150.24;
 const double noteG = 200.32;
 const double noteB = 253.04;
 const double noteHighE = 337.39;
@@ -32,6 +41,11 @@ const double gbMidPoint = (noteG + noteB) / 2;
 const double beMidPoint = (noteB + noteHighE) / 2;
 
 const double tolerance = 0.50; // Hz amount that note can be off for it to still register as correct note
+
+boolean showHz = false;
+boolean screenOn = false;
+
+int farHeight, midHeight, nearHeight;
 
 //clipping indicator variables
 boolean clipping = 0;
@@ -66,31 +80,34 @@ void setup() {
 
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C); // Address 0x3C for 128x32
 
-  //  display.display();
-  //  delay(1000);
+  pinMode(buttonPin, INPUT_PULLUP);
+  button.setEventHandler(handleEvent);
+
+  ButtonConfig* buttonConfig = button.getButtonConfig();
+  buttonConfig->setEventHandler(handleEvent);
+  buttonConfig->setFeature(ButtonConfig::kFeatureDoubleClick);
+  buttonConfig->setFeature(ButtonConfig::kFeatureSuppressClickBeforeDoubleClick);
+  buttonConfig->setFeature(ButtonConfig::kFeatureSuppressAfterClick);
+  buttonConfig->setFeature(ButtonConfig::kFeatureSuppressAfterDoubleClick);
 
   // Clear the buffer.
   display.clearDisplay();
   //display.display();
 
-  pinMode(13, OUTPUT); //led indicator pin
-  pinMode(12, OUTPUT); //output pin
-
   // text display tests
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
-  //display.setFont(&FreeSerifBold24pt7b);
-  display.setFont(&FreeSerifBold9pt7b);
-  //display.setCursor(0, 0);
-  display.setCursor(10, 22);
-  display.print("Guitar Tuner");
+  //  display.setFont(&FreeSerifBold24pt7b);
+  //  display.setFont(&FreeSerifBold9pt7b);
+  //  display.setCursor(10, 22);
+  //  display.print("Guitar Tuner");
   //  display.print("Connecting to SSID\n'adafruit':");
   //  display.print("connected!");
   //  display.println("IP: 10.0.1.23");
   //  display.println("Sending val #0");
   //  display.setCursor(0, 0);
   display.display(); // actually display all of the above
-  delay(1000);
+  //  delay(1000);
 
   cli();//diable interrupts
 
@@ -196,33 +213,76 @@ void checkClipping() { //manage clipping indication
   }
 }
 
+void bootScreen() {
+  display.clearDisplay();
+  display.setFont(&FreeSerifBold9pt7b);
+  display.setCursor(10, 22);
+  display.print("Guitar Tuner");
+  display.display(); // actually display all of the above
+  delay(1000);
+  screenOn = true;
+  showHz = false;
+}
+
+// The event handler for the button.
+void handleEvent(AceButton* /* button */, uint8_t eventType, uint8_t /* buttonState */) {
+  switch (eventType) {
+    case AceButton::kEventClicked:
+    case AceButton::kEventReleased:
+      if (!screenOn) {
+        bootScreen();
+      }
+      else {
+        display.clearDisplay();
+        display.display();
+        screenOn = false;
+      }
+      break;
+    case AceButton::kEventDoubleClicked: // Double click for frequency in Hz
+      showHz = !showHz;
+      break;
+  }
+}
+
 void displayLeftMost() {
-  display.fillRect(8, 4, 8, 28, WHITE); // Leftmost block
-  display.fillRect(22, 4, 8, 28, WHITE); // Left middle block
-  display.fillRect(36, 4, 8, 28, WHITE); // Rightmost left block
+  display.fillRect(8, 4, 8, farHeight, WHITE); // Leftmost block
+  display.fillRect(22, 4, 8, midHeight, WHITE); // Left middle block
+  display.fillRect(36, 4, 8, nearHeight, WHITE); // Rightmost left block
 }
 void displayLeftMiddle() {
-  display.fillRect(22, 4, 8, 28, WHITE); // Left middle block
-  display.fillRect(36, 4, 8, 28, WHITE); // Rightmost left block
+  display.fillRect(22, 4, 8, midHeight, WHITE); // Left middle block
+  display.fillRect(36, 4, 8, nearHeight, WHITE); // Rightmost left block
 }
 void displayRightMostLeft() {
-  display.fillRect(36, 4, 8, 28, WHITE); // Rightmost left block
+  display.fillRect(36, 4, 8, nearHeight, WHITE); // Rightmost left block
 }
 
 void displayLeftMostRight() {
-  display.fillRect(84, 4, 8, 28, WHITE); // Leftmost right block
+  display.fillRect(84, 4, 8, nearHeight, WHITE); // Leftmost right block
 }
 void displayRightMiddle() {
-  display.fillRect(84, 4, 8, 28, WHITE); // Leftmost right block
-  display.fillRect(98, 4, 8, 28, WHITE); // Right middle block
+  display.fillRect(84, 4, 8, nearHeight, WHITE); // Leftmost right block
+  display.fillRect(98, 4, 8, midHeight, WHITE); // Right middle block
 }
 void displayRightMost() {
-  display.fillRect(84, 4, 8, 28, WHITE); // Leftmost right block
-  display.fillRect(98, 4, 8, 28, WHITE); // Right middle block
-  display.fillRect(112, 4, 8, 28, WHITE); // Rightmost block
+  display.fillRect(84, 4, 8, nearHeight, WHITE); // Leftmost right block
+  display.fillRect(98, 4, 8, midHeight, WHITE); // Right middle block
+  display.fillRect(112, 4, 8, farHeight, WHITE); // Rightmost block
 }
 
+
+
 void displayBars(double note, double lowerLimit, double upperLimit) {
+  if (showHz) {
+    farHeight = 28;
+    midHeight = 21;
+    nearHeight = 14;
+  }
+  else {
+    farHeight = 28;
+    midHeight = 28;
+    nearHeight = 28;
+  }
   // Left Side
   if (frequency > lowerLimit && frequency < ((note - lowerLimit) / 3) + lowerLimit) {
     displayLeftMost();
@@ -250,6 +310,7 @@ void displayBars(double note, double lowerLimit, double upperLimit) {
 void loop() {
 
   checkClipping();
+  button.check();
 
 
   if (checkMaxAmp > ampThreshold) {
@@ -290,12 +351,21 @@ void loop() {
     //    double beMidPoint = (noteB + noteHighE) / 2;
 
     frequency = frequency / 2; // Running at 8MHz instead of 16MHz so frequency is doubled
-    if (frequency > 65) {
+    if (frequency > 65 && screenOn) {
       display.clearDisplay();
-      display.setCursor(51, 29);
-      display.setFont(&FreeSerifBold18pt7b);
+      if (showHz) {
+        display.setCursor(58, 14);
+        display.setFont(&FreeSerifBold9pt7b);
+        //display.fillRect(36, 4, 8, nearHeight, WHITE); // Test for text alignment
+        //display.fillRect(84, 4, 8, nearHeight, WHITE); // Test for text alignment
+      }
+      else {
+        display.setCursor(51, 29);
+        display.setFont(&FreeSerifBold18pt7b);
 
-      if (frequency > 65 && frequency < deMidPoint) { // D: 75.71
+      }
+
+      if (frequency > 65 && frequency < 500 && frequency < deMidPoint) { // D: 75.71
         display.print("D");
 
         displayBars(noteDropD, 65, deMidPoint);
@@ -345,12 +415,14 @@ void loop() {
       //      display
 
       //delay(10);
-      //      display.setCursor(40, 32);
-      //      display.setFont(&FreeSerifBold9pt7b);
-      //      display.print("Hz: ");
-      //      if (frequency > 65 && frequency < 500) {
-      //        display.print(frequency);
-      //      }
+      if (showHz) {
+        display.setCursor(39, 31);
+        display.setFont(&FreeSerifBold9pt7b);
+        //display.print("Hz: ");
+        if (frequency > 65 && frequency < 500) {
+          display.print(frequency);
+        }
+      }
       yield();
       display.display();
     }
@@ -358,6 +430,6 @@ void loop() {
 
 
 
-  delay(100);
+  //delay(100);
 
 }
