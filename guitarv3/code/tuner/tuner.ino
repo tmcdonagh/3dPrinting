@@ -201,8 +201,9 @@ void checkClipping() { //manage clipping indication
 }
 
 void bootScreen() {
-  digitalWrite(oledPowerPin, HIGH);
-  
+  //digitalWrite(oledPowerPin, HIGH);
+  //delay(200);
+
   display.clearDisplay();
   display.setFont(&FreeSerifBold9pt7b);
   display.setCursor(10, 22);
@@ -212,20 +213,30 @@ void bootScreen() {
   screenOn = true;
   showHz = false;
 }
-
+bool powerPin = false;
 // The event handler for the button.
 void handleEvent(AceButton* /* button */, uint8_t eventType, uint8_t /* buttonState */) {
   switch (eventType) {
     case AceButton::kEventClicked:
     case AceButton::kEventReleased:
+      if (powerPin) {
+        digitalWrite(oledPowerPin, LOW);
+        powerPin = false;
+      }
+      else {
+        digitalWrite(oledPowerPin, HIGH);
+        powerPin = true;
+      }
       if (!screenOn) {
         bootScreen();
       }
       else {
+        //digitalWrite(oledPowerPin, LOW);
         display.clearDisplay();
         display.display();
         screenOn = false;
-        digitalWrite(oledPowerPin, LOW);
+        //delay(200);
+        //digitalWrite(oledPowerPin, LOW);
       }
       break;
     case AceButton::kEventDoubleClicked: // Double click for frequency in Hz
@@ -373,4 +384,4 @@ void loop() {
       display.display();
     }
   }
-} 
+}
