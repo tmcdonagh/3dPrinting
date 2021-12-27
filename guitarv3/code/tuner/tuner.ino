@@ -12,6 +12,7 @@
 using namespace ace_button;
 
 const int buttonPin = 6;
+const int oledPowerPin = 2;
 
 AceButton button(buttonPin);
 
@@ -77,6 +78,7 @@ void setup() {
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C); // Address 0x3C for 128x32
 
   pinMode(buttonPin, INPUT_PULLUP);
+  pinMode(oledPowerPin, OUTPUT);
   button.setEventHandler(handleEvent);
 
   ButtonConfig* buttonConfig = button.getButtonConfig();
@@ -199,6 +201,8 @@ void checkClipping() { //manage clipping indication
 }
 
 void bootScreen() {
+  digitalWrite(oledPowerPin, HIGH);
+  
   display.clearDisplay();
   display.setFont(&FreeSerifBold9pt7b);
   display.setCursor(10, 22);
@@ -221,6 +225,7 @@ void handleEvent(AceButton* /* button */, uint8_t eventType, uint8_t /* buttonSt
         display.clearDisplay();
         display.display();
         screenOn = false;
+        digitalWrite(oledPowerPin, LOW);
       }
       break;
     case AceButton::kEventDoubleClicked: // Double click for frequency in Hz
