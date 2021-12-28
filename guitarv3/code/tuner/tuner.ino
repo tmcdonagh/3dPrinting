@@ -209,7 +209,7 @@ void checkClipping() { //manage clipping indication
 void bootScreen() {
   display.ssd1306_command(SSD1306_DISPLAYON);
   //  digitalWrite(oledPowerPin, HIGH);
-  delay(250);
+//  delay(250);
 
   display.clearDisplay();
   display.setFont(&FreeSerifBold9pt7b);
