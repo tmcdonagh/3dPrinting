@@ -75,11 +75,14 @@ void setup() {
 
   //Serial.begin(9600);
 
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C); // Address 0x3C for 128x32
+
 
   pinMode(buttonPin, INPUT_PULLUP);
   pinMode(oledPowerPin, OUTPUT);
+  digitalWrite(oledPowerPin, HIGH);
   button.setEventHandler(handleEvent);
+
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C); // Address 0x3C for 128x32
 
   ButtonConfig* buttonConfig = button.getButtonConfig();
   buttonConfig->setEventHandler(handleEvent);
@@ -114,6 +117,9 @@ void setup() {
   ADCSRA |= (1 << ADSC); //start ADC measurements
 
   sei();//enable interrupts
+
+  digitalWrite(oledPowerPin, LOW);
+  display.ssd1306_command(SSD1306_DISPLAYOFF);
 }
 
 ISR(ADC_vect) {//when new ADC value ready
@@ -201,8 +207,9 @@ void checkClipping() { //manage clipping indication
 }
 
 void bootScreen() {
-  //digitalWrite(oledPowerPin, HIGH);
-  //delay(200);
+  display.ssd1306_command(SSD1306_DISPLAYON);
+  //  digitalWrite(oledPowerPin, HIGH);
+  delay(250);
 
   display.clearDisplay();
   display.setFont(&FreeSerifBold9pt7b);
@@ -219,14 +226,14 @@ void handleEvent(AceButton* /* button */, uint8_t eventType, uint8_t /* buttonSt
   switch (eventType) {
     case AceButton::kEventClicked:
     case AceButton::kEventReleased:
-      if (powerPin) {
-        digitalWrite(oledPowerPin, LOW);
-        powerPin = false;
-      }
-      else {
-        digitalWrite(oledPowerPin, HIGH);
-        powerPin = true;
-      }
+      //      if (powerPin) {
+      //        digitalWrite(oledPowerPin, LOW);
+      //        powerPin = false;
+      //      }
+      //      else {
+      //        digitalWrite(oledPowerPin, HIGH);
+      //        powerPin = true;
+      //      }
       if (!screenOn) {
         bootScreen();
       }
@@ -235,8 +242,9 @@ void handleEvent(AceButton* /* button */, uint8_t eventType, uint8_t /* buttonSt
         display.clearDisplay();
         display.display();
         screenOn = false;
-        //delay(200);
-        //digitalWrite(oledPowerPin, LOW);
+        display.ssd1306_command(SSD1306_DISPLAYOFF);
+        //        delay(250);
+        //        digitalWrite(oledPowerPin, LOW);
       }
       break;
     case AceButton::kEventDoubleClicked: // Double click for frequency in Hz
