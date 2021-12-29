@@ -20,6 +20,103 @@ void handleEvent(AceButton*, uint8_t, uint8_t);
 
 Adafruit_SSD1306 display = Adafruit_SSD1306(128, 32, &Wire);
 
+// Tested Hz values
+//
+// C# 69.93
+// D 74.25
+// D# 78.17
+// E 83.25
+// F 88.22
+// F# 93.35
+// G 99.13
+// G# 104.52
+// A 111.16
+// A# 117.26
+// B 124.88
+// C 131.72
+// C# 140.37
+// D 149.08
+// D# 157.63
+// E 167.23
+// F 176.43
+// F# 186.71
+// G 198.26
+// G# 209.03
+// A 223.62
+// A# 237.42
+// B 249.75
+// C 267.10
+// C# 278.71
+// D 300.48
+// D# 315.26
+// E 331.57
+// F 349.65
+// F# 369.83
+// G 400.65
+// G# 418.07
+// A 447.23
+// A# 469.05
+// B 493.10
+// C 519.76
+// C# 565.62
+// D 600.97
+// D# 620.35
+// E 663.14
+// F 712.26
+// F# 739.65
+// G 769.24
+
+const double cs = 69.93;
+const double d = 74.25;
+const double ds = 78.17;
+const double e = 83.25;
+const double f = 88.22;
+const double fs = 93.35;
+const double g = 99.13;
+const double gs = 104.52;
+const double a1 = 111.16;
+const double as1 = 117.26;
+const double b1 = 124.88;
+const double c1 = 131.72;
+const double cs1 = 140.37;
+const double d1 = 149.08;
+const double ds1 = 157.63;
+const double e1 = 167.23;
+const double f1 = 176.43;
+const double fs1 = 186.71;
+const double g1 = 198.26;
+const double gs1 = 209.03;
+const double a2 = 223.62;
+const double as2 = 237.42;
+const double b2 = 249.75;
+const double c2 = 267.10;
+const double cs2 = 278.71;
+const double d2 = 300.48;
+const double ds2 = 315.26;
+const double e2 = 331.57;
+const double f2 = 349.65;
+const double fs2 = 369.83;
+const double g2 = 400.65;
+const double gs2 = 418.07;
+const double a3 = 447.23;
+const double as3 = 469.05;
+const double b3 = 493.10;
+const double c3 = 519.76;
+const double cs3 = 565.62;
+const double d3 = 600.97;
+const double ds3 = 620.35;
+const double e3 = 663.14;
+const double f3 = 712.26;
+const double fs3 = 739.65;
+const double g3 = 769.24;
+
+
+
+
+
+
+
+
 // Notes were set with trial and error
 // If I put the real Hz values it doesn't tune correctly
 const double noteDropD = 75.12;
@@ -209,7 +306,7 @@ void checkClipping() { //manage clipping indication
 void bootScreen() {
   display.ssd1306_command(SSD1306_DISPLAYON);
   //  digitalWrite(oledPowerPin, HIGH);
-//  delay(250);
+  //  delay(250);
 
   display.clearDisplay();
   display.setFont(&FreeSerifBold9pt7b);
@@ -281,37 +378,79 @@ void displayRightMost() {
 
 
 
-void displayBars(double note, double lowerLimit, double upperLimit) {
-  if (showHz) {
-    farHeight = 28;
-    midHeight = 21;
-    nearHeight = 14;
-  }
-  else {
-    farHeight = 28;
-    midHeight = 28;
-    nearHeight = 28;
-  }
-  // Left Side
-  if (frequency > lowerLimit && frequency < ((note - lowerLimit) / 3) + lowerLimit) {
-    displayLeftMost();
-  }
-  if (frequency >= ((note - lowerLimit) / 3) + lowerLimit && frequency < (((note - lowerLimit) / 3) * 2) + lowerLimit) {
-    displayLeftMiddle();
-  }
-  if (frequency >= (((note - lowerLimit) / 3) * 2) + lowerLimit && frequency < (note - tolerance)) {
-    displayRightMostLeft();
-  }
+//void displayBars(double note, double lowerLimit, double upperLimit) {
+//  if (showHz) {
+//    farHeight = 28;
+//    midHeight = 21;
+//    nearHeight = 14;
+//  }
+//  else {
+//    farHeight = 28;
+//    midHeight = 28;
+//    nearHeight = 28;
+//  }
+//  // Left Side
+//  if (frequency > lowerLimit && frequency < ((note - lowerLimit) / 3) + lowerLimit) {
+//    displayLeftMost();
+//  }
+//  if (frequency >= ((note - lowerLimit) / 3) + lowerLimit && frequency < (((note - lowerLimit) / 3) * 2) + lowerLimit) {
+//    displayLeftMiddle();
+//  }
+//  if (frequency >= (((note - lowerLimit) / 3) * 2) + lowerLimit && frequency < (note - tolerance)) {
+//    displayRightMostLeft();
+//  }
+//
+//  // Right Side
+//  if (frequency > (note + tolerance) && frequency <= ((upperLimit - note) / 3) + note) {
+//    displayLeftMostRight();
+//  }
+//  if (frequency > ((upperLimit - note) / 3) + note && frequency <= (((upperLimit - note) / 3) * 2) + note) {
+//    displayRightMiddle();
+//  }
+//  if (frequency > (((upperLimit - note) / 3) * 2) + note && frequency <= upperLimit) {
+//    displayRightMost();
+//  }
+//}
 
-  // Right Side
-  if (frequency > (note + tolerance) && frequency <= ((upperLimit - note) / 3) + note) {
-    displayLeftMostRight();
-  }
-  if (frequency > ((upperLimit - note) / 3) + note && frequency <= (((upperLimit - note) / 3) * 2) + note) {
-    displayRightMiddle();
-  }
-  if (frequency > (((upperLimit - note) / 3) * 2) + note && frequency <= upperLimit) {
-    displayRightMost();
+void displayBars(double note, double belowNote, double aboveNote, String letter) {
+  double lowerLimit = (belowNote + note) / 2;
+  double upperLimit = (note + aboveNote) / 2;
+
+  if (frequency >= lowerLimit && frequency < upperLimit) {
+
+    display.print(letter);
+    
+    if (showHz) {
+      farHeight = 28;
+      midHeight = 21;
+      nearHeight = 14;
+    }
+    else {
+      farHeight = 28;
+      midHeight = 28;
+      nearHeight = 28;
+    }
+    // Left Side
+    if (frequency > lowerLimit && frequency < ((note - lowerLimit) / 3) + lowerLimit) {
+      displayLeftMost();
+    }
+    if (frequency >= ((note - lowerLimit) / 3) + lowerLimit && frequency < (((note - lowerLimit) / 3) * 2) + lowerLimit) {
+      displayLeftMiddle();
+    }
+    if (frequency >= (((note - lowerLimit) / 3) * 2) + lowerLimit && frequency < (note - tolerance)) {
+      displayRightMostLeft();
+    }
+
+    // Right Side
+    if (frequency > (note + tolerance) && frequency <= ((upperLimit - note) / 3) + note) {
+      displayLeftMostRight();
+    }
+    if (frequency > ((upperLimit - note) / 3) + note && frequency <= (((upperLimit - note) / 3) * 2) + note) {
+      displayRightMiddle();
+    }
+    if (frequency > (((upperLimit - note) / 3) * 2) + note && frequency <= upperLimit) {
+      displayRightMost();
+    }
   }
 }
 
@@ -345,6 +484,53 @@ void loop() {
 
       }
 
+      displayBars(cs, 30, d, "C#");
+      displayBars(d, cs, ds, "D");
+      displayBars(ds, d, e, "D#");
+      displayBars(e, ds, f, "E");
+      displayBars(f, e, fs, "F");
+      displayBars(fs, f, g, "F#");
+      displayBars(g, fs, gs, "G");
+      displayBars(gs, g, a1, "G#");
+      displayBars(a1, gs, as1, "A");
+      displayBars(as1, a1, b1, "A#");
+      displayBars(b1, as1, c1, "B");
+      displayBars(c1, b1, cs1, "C");
+
+      displayBars(cs1, c1, d1, "C#");
+      displayBars(d1, cs1, ds1, "D");
+      displayBars(ds1, d1, e1, "D#");
+      displayBars(e1, ds1, f1, "E");
+      displayBars(f1, e1, fs1, "F");
+      displayBars(fs1, f1, g1, "F#");
+      displayBars(g1, fs1, gs1, "G");
+      displayBars(gs1, g1, a2, "G#");
+      displayBars(a2, gs1, as2, "A");
+      displayBars(as2, a2, b2, "A#");
+      displayBars(b2, as2, c2, "B");
+      displayBars(c2, b2, cs2, "C");
+
+      displayBars(cs2, c2, d2, "C#");
+      displayBars(d2, cs2, ds2, "D");
+      displayBars(ds2, d2, e2, "D#");
+      displayBars(e2, ds2, f2, "E");
+      displayBars(f2, e2, fs2, "F");
+      displayBars(fs2, f2, g2, "F#");
+      displayBars(g2, fs2, gs2, "G");
+      displayBars(gs2, g2, a3, "G#");
+      displayBars(a3, gs2, as3, "A");
+      displayBars(as3, a3, b3, "A#");
+      displayBars(b3, as3, c3, "B");
+      displayBars(c3, b3, cs3, "C");
+
+      displayBars(cs3, c3, d3, "C#");
+      displayBars(d3, cs3, ds3, "D");
+      displayBars(ds3, d3, e3, "D#");
+      displayBars(e3, ds3, f3, "E");
+      displayBars(f3, e3, fs3, "F");
+      displayBars(fs3, f3, g3, "F#");
+      displayBars(g3, fs3, 820.00, "G");
+      /*
       if (frequency > 65 && frequency < 500 && frequency < deMidPoint) { // D: 75.71
         display.print("D");
 
@@ -380,11 +566,12 @@ void loop() {
 
         displayBars(noteHighE, beMidPoint, noteHighE + 25);
       }
+      */
       if (showHz) {
         display.setCursor(39, 31);
         display.setFont(&FreeSerifBold9pt7b);
         //display.print("Hz: ");
-        if (frequency > 65 && frequency < 500) {
+        if (frequency > 65 && frequency < 800) {
           display.print(frequency);
         }
       }
@@ -392,4 +579,5 @@ void loop() {
       display.display();
     }
   }
+  delay(100); // Stops the reading from going crazy but messes up double button press
 }
