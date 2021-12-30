@@ -74,17 +74,17 @@ const double f = 88.22;
 const double fs = 93.35;
 const double g = 99.13;
 const double gs = 104.52;
-const double a1 = 111.16;
+const double a1 = 110.52;
 const double as1 = 117.26;
 const double b1 = 124.88;
 const double c1 = 131.72;
 const double cs1 = 140.37;
-const double d1 = 149.08;
+const double d1 = 147.93;
 const double ds1 = 157.63;
 const double e1 = 167.23;
 const double f1 = 176.43;
 const double fs1 = 186.71;
-const double g1 = 198.26;
+const double g1 = 196.23;
 const double gs1 = 209.03;
 const double a2 = 223.62;
 const double as2 = 237.42;
@@ -166,6 +166,7 @@ int timerTol = 10;//timer tolerance- adjust this if you need
 unsigned int ampTimer = 0;
 byte maxAmp = 0;
 byte checkMaxAmp;
+//byte ampThreshold = 30;//raise if you have a very noisy signal
 byte ampThreshold = 30;//raise if you have a very noisy signal
 
 void setup() {
@@ -315,7 +316,7 @@ void bootScreen() {
   display.display(); // actually display all of the above
   delay(1000);
   screenOn = true;
-  showHz = false;
+  showHz = true;
 }
 bool powerPin = false;
 // The event handler for the button.
@@ -579,5 +580,5 @@ void loop() {
       display.display();
     }
   }
-  delay(100); // Stops the reading from going crazy but messes up double button press
+  //delay(100); // Stops the reading from going crazy but messes up double button press
 }
