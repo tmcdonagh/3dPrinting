@@ -1,0 +1,1 @@
+Knob should be scaled to 35% and placed on letters in slicing software
