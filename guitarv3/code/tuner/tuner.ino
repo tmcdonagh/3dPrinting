@@ -11,14 +11,16 @@
 
 using namespace ace_button;
 
-const int buttonPin = 6;
+//const int buttonPin = 6;
+
 const int oledPowerPin = 2;
 
-AceButton button(buttonPin);
-
+//AceButton button(buttonPin);
+AceButton button(A2);
 void handleEvent(AceButton*, uint8_t, uint8_t);
 
-Adafruit_SSD1306 display = Adafruit_SSD1306(128, 32, &Wire);
+//Adafruit_SSD1306 display = Adafruit_SSD1306(128, 32, &Wire);
+Adafruit_SSD1306 display = Adafruit_SSD1306(128, 64, &Wire);
 
 // Tested Hz values
 //
@@ -175,7 +177,8 @@ void setup() {
 
 
 
-  pinMode(buttonPin, INPUT_PULLUP);
+  //pinMode(buttonPin, INPUT_PULLUP);
+  pinMode(A2, INPUT_PULLUP);
   pinMode(oledPowerPin, OUTPUT);
   digitalWrite(oledPowerPin, HIGH);
   button.setEventHandler(handleEvent);
@@ -470,7 +473,7 @@ void loop() {
     Serial.print(frequency);
     Serial.println(" hz");
 
-    frequency = frequency / 2; // Running at 8MHz instead of 16MHz so frequency is doubled
+    //frequency = frequency / 2; // Running at 8MHz instead of 16MHz so frequency is doubled
     if (frequency > 65 && screenOn) {
       display.clearDisplay();
       if (showHz) {
